@@ -18,6 +18,9 @@ export default class Tweet extends BaseModel {
   declare mediaUrl: string | null
 
   @column()
+  declare mediaPath: string | null
+
+  @column()
   declare likesCount: number
 
   @column()

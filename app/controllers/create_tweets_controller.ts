@@ -1,34 +1,48 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import Tweet from '#models/tweet'
+import app from '@adonisjs/core/services/app'
+import { cuid } from '@adonisjs/core/helpers'
 
 export default class CreateTweetsController {
-  /**
-   * Méthode pour créer un nouveau tweet
-   */
   public async store({ request, auth, response }: HttpContext) {
-    // 1️⃣ On récupère le contenu du tweet envoyé par le formulaire
     const content = request.input('content')
 
-    // 2️⃣ On crée un nouveau tweet lié à l'utilisateur connecté
-    await Tweet.create({
-      content,
-      userId: auth.user!.id, // '!' garantit que user n'est pas nul
+    // 🖼️ 1. Récupérer le fichier média
+    const media = request.file('media', {
+      size: '5mb',
+      extnames: ['jpg', 'png', 'jpeg', 'gif', 'mp4'],
     })
 
-    // 3️⃣ Après la création, on redirige vers la route du dashboard
+    let mediaPath: string | null = null
+
+    // 🧩 2. Vérification du fichier
+    if (media) {
+      if (!media.isValid) {
+        return response.badRequest({ errors: media.errors })
+      }
+
+      // 📂 3. Déplacer le fichier dans un dossier permanent
+      await media.move(app.makePath('storage/uploads'), {
+        name: `${cuid()}.${media.extname}`,
+      })
+
+      // ✅ 4. Enregistrer le nom du fichier
+      mediaPath = media.fileName!
+    }
+
+    // 🐦 5. Créer le tweet (avec ou sans média)
+    await Tweet.create({
+      content,
+      mediaPath,
+      userId: auth.user!.id,
+    })
+
     return response.redirect().toRoute('dashboard')
   }
 
-  /**
-   * Méthode pour afficher tous les tweets
-   */
   public async index({ view }: HttpContext) {
-    // 1️⃣ On récupère tous les tweets, triés du plus récent au plus ancien
-    const tweets = await Tweet.query()
-      .preload('user') // Charge les infos du user lié à chaque tweet
-      .orderBy('created_at', 'desc')
+    const tweets = await Tweet.query().preload('user').orderBy('created_at', 'desc')
 
-    // 2️⃣ On passe les tweets à la vue Edge (par ex. pages/dashboard.edge)
     return view.render('pages/dashboard', { tweets })
   }
 }
