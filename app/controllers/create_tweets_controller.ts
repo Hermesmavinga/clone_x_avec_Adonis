@@ -22,12 +22,12 @@ export default class CreateTweetsController {
       }
 
       // 📂 3. Déplacer le fichier dans un dossier permanent
-      await media.move(app.makePath('storage/uploads'), {
+      await media.move(app.publicPath('uploads'), {
         name: `${cuid()}.${media.extname}`,
       })
 
       // ✅ 4. Enregistrer le nom du fichier
-      mediaPath = media.fileName!
+      mediaPath = 'uploads/' + media.fileName!
     }
 
     // 🐦 5. Créer le tweet (avec ou sans média)
