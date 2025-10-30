@@ -9,6 +9,7 @@ export default class extends BaseSchema {
       table.string('content').notNullable()
       table.integer('user_id').unsigned().notNullable().references('users.id').onDelete('CASCADE')
       table.string('media_url').nullable()
+      table.string('media_path').nullable()
       table.integer('likes_count').defaultTo(0)
       table.integer('retweets_count').defaultTo(0)
       table.integer('comments_count').defaultTo(0)
