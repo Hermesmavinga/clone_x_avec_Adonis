@@ -2,6 +2,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 import Tweet from '#models/tweet'
 import app from '@adonisjs/core/services/app'
 import { cuid } from '@adonisjs/core/helpers'
+import { promises as fs } from 'fs'
 
 export default class CreateTweetsController {
   public async store({ request, auth, response }: HttpContext) {
@@ -44,5 +45,32 @@ export default class CreateTweetsController {
     const tweets = await Tweet.query().preload('user').orderBy('created_at', 'desc')
 
     return view.render('pages/dashboard', { tweets })
+  }
+
+  public async destroy({ params, auth, response }: HttpContext) {
+    try {
+      const tweet = await Tweet.findOrFail(params.id)
+      // 🔹 Vérifier si l'utilisateur est bien le propriétaire du tweet
+      if (tweet.userId !== auth.user!.id) {
+        return response.unauthorized({ message: 'Action non autorisée' })
+      }
+
+      // 🔹 Supprimer le fichier média s’il existe
+      if (tweet.mediaPath) {
+        const mediaFullPath = app.makePath(tweet.mediaPath)
+        try {
+          await fs.unlink(mediaFullPath)
+        } catch (err) {
+          console.warn('⚠️ Impossible de supprimer le fichier média :', err.message)
+        }
+      }
+      // 🔹 Supprimer le tweet
+      await tweet.delete()
+
+      // 🔹 Retourner une réponse (ou redirection)
+      return response.redirect().back()
+    } catch (error) {
+      return response.internalServerError({ message: 'Erreur lors de la suppression du tweet' })
+    }
   }
 }
