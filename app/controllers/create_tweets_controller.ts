@@ -27,7 +27,7 @@ export default class CreateTweetsController {
       })
 
       // ✅ 4. Enregistrer le nom du fichier
-      mediaPath = 'uploads/' + media.fileName!
+      mediaPath = `uploads/${media.fileName!}`
     }
 
     // 🐦 5. Créer le tweet (avec ou sans média)
