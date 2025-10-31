@@ -23,3 +23,7 @@ router.post('/login', [SessionController, 'loginStore'])
 router.post('/signup', [RegistersController, 'createUser']).as('showSingup')
 router.get('/logout', [LogoutsController, 'storeLogout']).use(middleware.auth())
 router.post('/tweets', [CreateTweetsController, 'store']).use(middleware.auth())
+router
+  .post('/tweets/:id', [CreateTweetsController, 'destroy'])
+  .as('tweets.delete')
+  .use(middleware.auth())

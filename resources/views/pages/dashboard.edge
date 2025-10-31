@@ -276,7 +276,7 @@
                 </div>
                 <div class="flex-1">
                   <div class="flex items-center gap-1 mb-1">
-                    <span class="font-bold">{{ auth.user.fullname }}</span>
+                    <span class="font-bold">{{ tweet.user.fullname }}</span>
                     <svg class="w-5 h-5 text-blue-500" viewBox="0 0 24 24" fill="currentColor">
                       <path
                         d="M22.25 12c0-1.43-.88-2.67-2.19-3.34.46-1.39.2-2.9-.81-3.91s-2.52-1.27-3.91-.81c-.66-1.31-1.91-2.19-3.34-2.19s-2.67.88-3.33 2.19c-1.4-.46-2.91-.2-3.92.81s-1.26 2.52-.8 3.91c-1.31.67-2.2 1.91-2.2 3.34s.89 2.67 2.2 3.34c-.46 1.39-.21 2.9.8 3.91s2.52 1.26 3.91.81c.67 1.31 1.91 2.19 3.34 2.19s2.68-.88 3.34-2.19c1.39.45 2.9.2 3.91-.81s1.27-2.52.81-3.91c1.31-.67 2.19-1.91 2.19-3.34zm-11.71 4.2L6 11.67l1.4-1.4 3.14 3.14 6.22-6.22 1.4 1.4-7.62 7.61z"
@@ -289,7 +289,6 @@
                   </div>
 
                   <div class="mb-3">
-
                     <p>
                       {{ tweet.content }}
                     </p>
@@ -348,13 +347,34 @@
                           </svg>
                         </div>
                       </button>
+                      <!-- bouton supprimer tweet -->
+                      @if(tweet.userId === auth.user.id)
+                        <form
+                          action="{{ route('tweets.delete', [tweet.id]) }}"
+                          onsubmit="return confirm('Voulez-vous vraiment supprimer ce tweet ?')"
+                          method="POST"
+                        >
+                          {{ csrfField() }}
+                          <button class="hover:text-blue-500 group transition-colors">
+                            <div class="p-2 group-hover:bg-red-900/30 rounded-full transition-colors">
+                              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                                <path
+                                  d="M3 6h18v2H3V6zm2 3h14l-1.5 12.5c-.1.83-.77 1.5-1.6 1.5H8.1c-.83 0-1.5-.67-1.6-1.5L5 9zm5 2v9h2v-9H10zm4 0v9h2v-9h-2zM9 4V3h6v1h5v2H4V4h5z"
+                                />
+                              </svg>
+                            </div>
+                          </button>
+                        </form>
+
+                      @end
+                      <!-- fin bouton supprimer tweet -->
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           @end
-          
+            
         </div>
 
         <!-- Sidebar Right -->
