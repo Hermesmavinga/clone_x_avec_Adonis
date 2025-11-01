@@ -42,7 +42,10 @@ export default class CreateTweetsController {
   }
 
   public async index({ view }: HttpContext) {
-    const tweets = await Tweet.query().preload('user').orderBy('created_at', 'desc')
+    const tweets = await Tweet.query()
+      .preload('user')
+      .preload('retweetsby')
+      .orderBy('created_at', 'desc')
 
     return view.render('pages/dashboard', { tweets })
   }

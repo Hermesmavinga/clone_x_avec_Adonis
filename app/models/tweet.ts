@@ -3,6 +3,10 @@ import { BaseModel, column } from '@adonisjs/lucid/orm'
 import User from '#models/user'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 import { belongsTo } from '@adonisjs/lucid/orm'
+import Like from '#models/like'
+import type { HasMany } from '@adonisjs/lucid/types/relations'
+import { hasMany } from '@adonisjs/lucid/orm'
+import Retweet from '#models/retweet'
 
 export default class Tweet extends BaseModel {
   @column({ isPrimary: true })
@@ -40,4 +44,10 @@ export default class Tweet extends BaseModel {
 
   @belongsTo(() => User)
   declare user: BelongsTo<typeof User>
+
+  @hasMany(() => Like)
+  declare likes: HasMany<typeof Like>
+
+  @hasMany(() => Retweet)
+  declare retweetsby: HasMany<typeof Retweet>
 }

@@ -6,6 +6,8 @@ import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
 import Tweet from '#models/tweet'
 import type { HasMany } from '@adonisjs/lucid/types/relations'
 import { hasMany } from '@adonisjs/lucid/orm'
+import Like from '#models/like'
+import Retweet from './retweet.js'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email'],
@@ -42,4 +44,10 @@ export default class User extends compose(BaseModel, AuthFinder) {
 
   @hasMany(() => Tweet)
   declare tweets: HasMany<typeof Tweet>
+
+  @hasMany(() => Like)
+  declare likes: HasMany<typeof Like>
+
+  @hasMany(() => Retweet)
+  declare retweetsby: HasMany<typeof Retweet>
 }
