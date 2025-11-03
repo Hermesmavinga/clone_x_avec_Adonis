@@ -13,8 +13,8 @@ import SessionController from '#controllers/session_controller'
 import { middleware } from '#start/kernel'
 import LogoutsController from '#controllers/logouts_controller'
 import CreateTweetsController from '#controllers/create_tweets_controller'
-import LikesController from '#controllers/likes_controller'
 import RetweetsController from '#controllers/retweets_controller'
+import LikesController from '#controllers/likes_controller'
 
 router.on('/').render('pages/home')
 router.on('/signupView').render('pages/signup')
@@ -31,11 +31,11 @@ router
   .use(middleware.auth())
 
 router
-  .post('/tweets/:id/like', [LikesController, 'toggleLike'])
-  .as('tweets.like')
+  .post('/tweets/:id/retweet', [RetweetsController, 'toggleRetweet'])
+  .as('tweets.retweet')
   .use(middleware.auth())
 
 router
-  .post('/tweets/:id/retweet', [RetweetsController, 'toggleRetweet'])
-  .as('tweets.retweet')
+  .post('/tweets/:id/like', [LikesController, 'toggleLike'])
+  .as('tweets.like')
   .use(middleware.auth())

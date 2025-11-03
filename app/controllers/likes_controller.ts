@@ -1,28 +1,42 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import Like from '#models/like'
+import Tweet from '#models/tweet'
 
 export default class LikesController {
   public async toggleLike({ auth, params, response }: HttpContext) {
-    const user = auth.user
-    if (!user)
-      return response.unauthorized(
-        "Vous n'êtes pas connecté, veuillez vous connecter pour pouvoir liker."
-      )
+    try {
+      const user = auth.user
+      if (!user) return response.unauthorized('Utilisateur non authentifié')
 
-    const tweetId = params.id
+      const tweetId = params.id
+      const tweet = await Tweet.find(tweetId)
+      if (!tweet) return response.notFound('Tweet introuvable')
 
-    // Vérifie si le user a déjà liké ce tweet
-    const existingLike = await Like.query()
-      .where('user_id', user.id)
-      .where('tweet_id', tweetId)
-      .first()
+      // Vérifier si le like existe déjà
+      const existingLike = await Like.query()
+        .where('user_id', user.id)
+        .andWhere('tweet_id', tweetId)
+        .first()
 
-    if (existingLike) {
-      await existingLike.delete() // retirer le like
-    } else {
-      await Like.create({ userId: user.id, tweetId }) // ajouter le like
+      if (existingLike) {
+        // Retirer le like (unlike)
+        await existingLike.delete()
+        console.log('Like supprimé avec succès')
+        // return response.json({ success: true, action: 'unliked' })
+        return response.redirect().toRoute('dashboard')
+      } else {
+        // Créer le like
+        await Like.create({ userId: user.id, tweetId: tweetId })
+        console.log('Like créé avec succès')
+        // return response.json({ success: true, action: 'liked' })
+        return response.redirect().toRoute('dashboard')
+      }
+    } catch (error) {
+      console.error('Erreur toggleLike:', error)
+      return response.status(500).json({
+        success: false,
+        message: 'Une erreur est survenue lors du like/unlike',
+      })
     }
-
-    return response.redirect().back() // revient à la page précédente
   }
 }

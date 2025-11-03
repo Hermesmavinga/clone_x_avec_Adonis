@@ -45,6 +45,7 @@ export default class CreateTweetsController {
     const tweets = await Tweet.query()
       .preload('user')
       .preload('retweetsby')
+      .preload('likes')
       .orderBy('created_at', 'desc')
 
     return view.render('pages/dashboard', { tweets })
