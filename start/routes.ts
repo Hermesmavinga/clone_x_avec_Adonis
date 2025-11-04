@@ -15,6 +15,7 @@ import LogoutsController from '#controllers/logouts_controller'
 import CreateTweetsController from '#controllers/create_tweets_controller'
 import RetweetsController from '#controllers/retweets_controller'
 import LikesController from '#controllers/likes_controller'
+import CommentsController from '#controllers/comments_controller'
 
 router.on('/').render('pages/home')
 router.on('/signupView').render('pages/signup')
@@ -38,4 +39,9 @@ router
 router
   .post('/tweets/:id/like', [LikesController, 'toggleLike'])
   .as('tweets.like')
+  .use(middleware.auth())
+
+router
+  .post('/tweets/:id/reply', [CommentsController, 'reply'])
+  .as('tweets.reply')
   .use(middleware.auth())

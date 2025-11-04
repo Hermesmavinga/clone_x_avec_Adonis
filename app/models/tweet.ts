@@ -36,6 +36,16 @@ export default class Tweet extends BaseModel {
   @column()
   declare is_retweet: boolean
 
+  // Clé étrangère optionnelle vers le tweet parent (si c'est une réponse)
+  @column()
+  declare parentId?: number | null
+
+  @belongsTo(() => Tweet, { foreignKey: 'parentId' })
+  declare parent: BelongsTo<typeof Tweet> // relation vers le tweet parent
+
+  @hasMany(() => Tweet, { foreignKey: 'parentId' })
+  declare replies: HasMany<typeof Tweet> // relation vers les réponses
+
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 

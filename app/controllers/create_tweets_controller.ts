@@ -41,9 +41,26 @@ export default class CreateTweetsController {
     return response.redirect().toRoute('dashboard')
   }
 
+  // public async index({ view }: HttpContext) {
+  //   const tweets = await Tweet.query()
+  //     .preload('user')
+  //     .preload('retweetsby')
+  //     .preload('likes')
+  //     .preload('replies', (repliesQuery) => {
+  //       repliesQuery.preload('user')
+  //     })
+  //     .orderBy('created_at', 'desc')
+
+  //   return view.render('pages/dashboard', { tweets })
+  // }
+
   public async index({ view }: HttpContext) {
     const tweets = await Tweet.query()
+      .whereNull('parentId') // Seulement les tweets principaux
       .preload('user')
+      .preload('replies', (repliesQuery) => {
+        repliesQuery.preload('user').preload('likes').orderBy('created_at', 'asc')
+      })
       .preload('retweetsby')
       .preload('likes')
       .orderBy('created_at', 'desc')
@@ -51,30 +68,66 @@ export default class CreateTweetsController {
     return view.render('pages/dashboard', { tweets })
   }
 
-  public async destroy({ params, auth, response }: HttpContext) {
+  //   public async destroy({ params, auth, response }: HttpContext) {
+  //     try {
+  //       const tweet = await Tweet.findOrFail(params.id)
+  //       // 🔹 Vérifier si l'utilisateur est bien le propriétaire du tweet
+  //       if (tweet.userId !== auth.user!.id) {
+  //         return response.unauthorized({ message: 'Action non autorisée' })
+  //       }
+
+  //       // 🔹 Supprimer le fichier média s’il existe
+  //       if (tweet.mediaPath) {
+  //         const mediaFullPath = app.makePath(tweet.mediaPath)
+  //         try {
+  //           await fs.unlink(mediaFullPath)
+  //         } catch (err) {
+  //           console.warn('⚠️ Impossible de supprimer le fichier média :', err.message)
+  //         }
+  //       }
+  //       // 🔹 Supprimer le tweet
+  //       await tweet.delete()
+
+  //       // 🔹 Retourner une réponse (ou redirection)
+  //       return response.redirect().back()
+  //     } catch (error) {
+  //       return response.internalServerError({ message: 'Erreur lors de la suppression du tweet' })
+  //     }
+  //   }
+  // }
+
+  public async destroy({ params, auth, response, session }: HttpContext) {
     try {
       const tweet = await Tweet.findOrFail(params.id)
-      // 🔹 Vérifier si l'utilisateur est bien le propriétaire du tweet
+
+      // Vérifier si l'utilisateur est bien le propriétaire du tweet
       if (tweet.userId !== auth.user!.id) {
-        return response.unauthorized({ message: 'Action non autorisée' })
+        session.flash('errors', { error: 'Action non autorisée' })
+        return response.redirect().back()
       }
 
-      // 🔹 Supprimer le fichier média s’il existe
+      // Supprimer le fichier média s'il existe
       if (tweet.mediaPath) {
         const mediaFullPath = app.makePath(tweet.mediaPath)
         try {
           await fs.unlink(mediaFullPath)
         } catch (err) {
           console.warn('⚠️ Impossible de supprimer le fichier média :', err.message)
+          // On continue même si la suppression du fichier échoue
         }
       }
-      // 🔹 Supprimer le tweet
+
+      // Supprimer le tweet
       await tweet.delete()
 
-      // 🔹 Retourner une réponse (ou redirection)
+      // Redirection avec message de succès
+      session.flash('success', 'Tweet supprimé avec succès')
       return response.redirect().back()
     } catch (error) {
-      return response.internalServerError({ message: 'Erreur lors de la suppression du tweet' })
+      console.error('Erreur détaillée suppression:', error)
+
+      session.flash('errors', { error: 'Erreur lors de la suppression du tweet' })
+      return response.redirect().back()
     }
   }
 }
