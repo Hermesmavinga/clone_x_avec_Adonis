@@ -8,6 +8,7 @@ import type { HasMany } from '@adonisjs/lucid/types/relations'
 import { hasMany } from '@adonisjs/lucid/orm'
 import Like from '#models/like'
 import Retweet from './retweet.js'
+import Follow from './follow.js'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email'],
@@ -50,4 +51,11 @@ export default class User extends compose(BaseModel, AuthFinder) {
 
   @hasMany(() => Retweet)
   declare retweetsby: HasMany<typeof Retweet>
+
+  // Relations avec Follow (N-N entre utilisateurs)
+  @hasMany(() => Follow, { foreignKey: 'followerId' })
+  declare following: HasMany<typeof Follow> // utilisateurs que je suis
+
+  @hasMany(() => Follow, { foreignKey: 'followedId' })
+  declare followers: HasMany<typeof Follow> // utilisateurs qui me suivent
 }
