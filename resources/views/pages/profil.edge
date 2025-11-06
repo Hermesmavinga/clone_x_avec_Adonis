@@ -298,10 +298,10 @@
             </button>
             <div>
               <h1 id="nav-fullname" class="font-bold text-xl">
-                Profil
+                {{ user.fullname }}
               </h1>
               <p id="nav-tweet-count" class="text-gray-400 text-sm">
-                0 Tweets
+                {{ `${tweets.length} Tweets` }}
               </p>
             </div>
           </div>
@@ -547,49 +547,44 @@
           </div>
         </div>
 
-        <div class="bg-[#16181c] rounded-xl overflow-hidden">
-          <h2 class="text-xl font-bold px-4 py-3">
-            Vous pourriez aimer
+        <div class="bg-gray-900 rounded-2xl p-4 mb-4">
+          <h2 class="text-xl font-bold mb-4">
+            Vous pourriez Suivre
           </h2>
-          <div class="px-4 py-2 hover:bg-[#1e1f23] flex justify-between items-center cursor-pointer">
-            <div>
-              <p class="font-semibold text-white">
-                *Urbano*
-              </p>
-              <p class="text-sm text-gray-400">
-                @Urbano_N
-              </p>
-            </div>
-            <button class="bg-white text-black px-4 py-1 rounded-full font-semibold">
-              Suivre
-            </button>
-          </div>
-          <div class="px-4 py-2 hover:bg-[#1e1f23] flex justify-between items-center cursor-pointer">
-            <div>
-              <p class="font-semibold text-white">
-                Bernard BAHATI
-              </p>
-              <p class="text-sm text-gray-400">
-                @Bernard_bahati
-              </p>
-            </div>
-            <button class="bg-white text-black px-4 py-1 rounded-full font-semibold">
-              Suivre
-            </button>
-          </div>
-          <div class="px-4 py-2 hover:bg-[#1e1f23] flex justify-between items-center cursor-pointer">
-            <div>
-              <p class="font-semibold text-white">
-                Billy
-              </p>
-              <p class="text-sm text-gray-400">
-                @RebeuDeter
-              </p>
-            </div>
-            <button class="bg-white text-black px-4 py-1 rounded-full font-semibold">
-              Suivre
-            </button>
-          </div>
+
+          @if(suggestions && suggestions.length > 0)
+            @each(suggestion in suggestions)
+              <div
+                class="flex items-center justify-between mb-4 pb-4 border-b border-gray-800 last:border-b-0 last:mb-0 last:pb-0"
+              >
+                <div class="flex items-center gap-3">
+                  <div class="w-12 h-12 rounded-full bg-gray-700">
+                  </div>
+                  <div>
+                    <div class="font-bold text-sm">
+                      {{ suggestion.fullname }}
+                    </div>
+                    <div class="text-gray-500 text-sm">
+                      {{ `@${suggestion.fullname}` }}
+                    </div>
+                  </div>
+                </div>
+                <form action="{{ route('follow.toggle', { id: suggestion.id }) }}" method="POST">
+                  {{ csrfField() }}
+                  <button
+                    type="submit"
+                    class="bg-white text-black font-bold rounded-full px-4 py-1.5 text-sm hover:bg-gray-200 transition-colors"
+                  >
+                    {{ suggestion.isFollowing ? 'Abonné' : 'Suivre' }}
+                  </button>
+                </form>
+              </div>
+            @endeach
+          @else
+            <p class="text-gray-500 text-sm">
+              Aucune suggestion pour le moment
+            </p>
+          @endif
         </div>
         <div class="text-x-gray text-sm flex flex-wrap gap-x-2 gap-y-1 mt-6">
           <a href="#" class="hover:underline">Conditions d'utilisation</a>
