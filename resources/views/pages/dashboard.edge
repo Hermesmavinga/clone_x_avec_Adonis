@@ -472,8 +472,11 @@
             <h2 class="text-xl font-bold mb-4">
               Vous pourriez aimer
             </h2>
+
             @each(suggestion in suggestions)
-              <div class="flex items-center justify-between mb-4 pb-4">
+              <div
+                class="flex items-center justify-between mb-4 pb-4 border-b border-gray-800 last:border-b-0 last:mb-0 last:pb-0"
+              >
                 <div class="flex items-center gap-3">
                   <div class="w-12 h-12 rounded-full bg-gray-700">
                   </div>
@@ -488,19 +491,16 @@
                 </div>
                 <form action="{{ route('follow.toggle', { id: suggestion.id }) }}" method="POST">
                   {{ csrfField() }}
-                  <button
+        <button
                     type="submit"
                     class="bg-white text-black font-bold rounded-full px-4 py-1.5 text-sm hover:bg-gray-200 transition-colors"
                   >
                     {{ suggestion.isFollowing ? 'Abonné' : 'Suivre' }}
-                  </button>
+        </button>
                 </form>
-
               </div>
-
-            </div>
-          @endeach
-          
+            @endeach
+          </div>
           <!-- Trending Topics -->
           <div class="bg-gray-900 rounded-2xl p-4">
             <h2 class="text-xl font-bold mb-4">
