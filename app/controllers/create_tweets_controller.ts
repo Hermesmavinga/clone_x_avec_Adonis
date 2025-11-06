@@ -3,6 +3,8 @@ import Tweet from '#models/tweet'
 import app from '@adonisjs/core/services/app'
 import { cuid } from '@adonisjs/core/helpers'
 import { promises as fs } from 'fs'
+import User from '#models/user'
+import Follow from '#models/follow'
 
 export default class CreateTweetsController {
   public async store({ request, auth, response }: HttpContext) {
@@ -54,7 +56,7 @@ export default class CreateTweetsController {
   //   return view.render('pages/dashboard', { tweets })
   // }
 
-  public async index({ view }: HttpContext) {
+  public async index({ view, auth }: HttpContext) {
     const tweets = await Tweet.query()
       .whereNull('parentId') // Seulement les tweets principaux
       .preload('user')
@@ -65,7 +67,26 @@ export default class CreateTweetsController {
       .preload('likes')
       .orderBy('created_at', 'desc')
 
-    return view.render('pages/dashboard', { tweets })
+    //  LISTE DES USERS SUGGESTION
+    const suggestionsUsers = await User.query().whereNot('id', auth.user!.id)
+    // ETAT DES USERS SUGGERER
+    const suggestionsFollowState = await Promise.all(
+      suggestionsUsers.map(async (user) => {
+        const isFollowing = await Follow.query()
+          .where('followerId', auth.user!.id)
+          .andWhere('followedId', user.id)
+          .first()
+        return {
+          ...user.toJSON(),
+          isFollowing: !!isFollowing,
+        }
+      })
+    )
+
+    return view.render('pages/dashboard', {
+      tweets,
+      suggestions: suggestionsFollowState,
+    })
   }
 
   //   public async destroy({ params, auth, response }: HttpContext) {

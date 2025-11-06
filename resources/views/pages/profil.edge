@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      Profil - X
+    </title>
+    <script src="https://cdn.tailwindcss.com">
+
+    </script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              "twitter-blue": "#1da1f2",
+              "dark-gray": "#15202b",
+              "darker-gray": "#192734",
+              "x-black": "#000000",
+              "x-dark": "#16181C",
+              "x-gray": "#71767B",
+              "x-light-gray": "#2F3336",
+              "x-blue": "#1D9BF0"
+            }
+          }
+        }
+      };
+    </script>
+    <style>
+      .loader {
+        border-top-color: #1da1f2;
+        animation: spinner 1.5s linear infinite;
+      }
+      
+      @keyframes spinner {
+        0% {
+          transform: rotate(0deg);
+        }
+      
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      
+      .loader {
+        border-top-color: #1da1f2;
+        -webkit-animation: spinner 1.5s linear infinite;
+        animation: spinner 1.5s linear infinite;
+      }
+      
+      @-webkit-keyframes spinner {
+        0% {
+          -webkit-transform: rotate(0deg);
+        }
+      
+        100% {
+          -webkit-transform: rotate(360deg);
+        }
+      }
+      
+      @keyframes spinner {
+        0% {
+          transform: rotate(0deg);
+        }
+      
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      
+      .verified-badge {
+        display: inline-flex;
+        align-items: center;
+        background: #1da1f2;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        justify-content: center;
+        margin-left: 4px;
+      }
+      
+      .tweet-hover:hover {
+        background-color: rgba(255, 255, 255, 0.03);
+      }
+      
+      .profile-section {
+        backdrop-filter: blur(10px);
+        background: rgba(0, 0, 0, 0.6);
+      }
+      
+      .sticky-sidebar {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow-y: auto;
+      }
+      
+      .main-content {
+        overflow-y: auto;
+        height: 100vh;
+      }
+      
+      .hide-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      
+      .hide-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    </style>
+  </head>
+  <body class="bg-black text-white font-sans">
+    <div class="flex max-w-7xl mx-auto h-screen overflow-hidden">
+      <!-- Sidebar gauche -->
+      <aside class="w-72 p-4 border-r border-gray-800 hidden md:block sticky-sidebar hide-scrollbar">
+        <nav class="space-y-4">
+          <div class="text-2xl font-bold text-white mb-6">
+            <img src="assets/Vector (1).png" alt="" />
+          </div>
+          <a href="accueil.html" class="flex items-center p-3 rounded-full hover:bg-x-dark text-xl font-bold">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-6 h-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
+              />
+            </svg>
+            <span class="ml-4">Accueil</span>
+          </a>
+          <a href="#" class="flex items-center p-3 rounded-full hover:bg-x-dark text-xl">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-6 h-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+              />
+            </svg>
+            <span class="ml-4">Explorer</span>
+          </a>
+          <a href="#" class="flex items-center p-3 rounded-full hover:bg-x-dark text-xl">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-6 h-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"
+              />
+            </svg>
+            <span class="ml-4">Notifications</span>
+          </a>
+          <a href="#" class="flex items-center p-3 rounded-full hover:bg-x-dark text-xl">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-6 h-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"
+              />
+            </svg>
+            <span class="ml-4">Messages</span>
+          </a>
+          <a href="#" class="flex items-center p-3 rounded-full hover:bg-x-dark text-xl">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-6 h-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.5l-.394-.933a2.25 2.25 0 00-1.423-1.423L13.5 19.5l.933-.394a2.25 2.25 0 001.423-1.423l.394-.933.394.933a2.25 2.25 0 001.423 1.423l.933.394-.933.394a2.25 2.25 0 00-1.423 1.423z"
+              />
+            </svg>
+            <span class="ml-4">Grok</span>
+          </a>
+          <a href="#" class="flex items-center p-3 rounded-full hover:bg-x-dark text-xl">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-6 h-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z"
+              />
+            </svg>
+            <span class="ml-4">Signets</span>
+          </a>
+          <a href="#" class="flex items-center p-3 rounded-full hover:bg-x-dark text-xl">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-6 h-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"
+              />
+            </svg>
+            <span class="ml-4">Communautés</span>
+          </a>
+          <a href="profil.html" class="flex items-center p-3 rounded-full hover:bg-x-dark text-xl">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-6 h-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
+              />
+            </svg>
+            <span class="ml-4">Profil</span>
+          </a>
+          <a href="#" class="flex items-center p-3 rounded-full hover:bg-x-dark text-xl">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-6 h-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
+              />
+            </svg>
+            <span class="ml-4">Plus</span>
+          </a>
+          <button class="mt-6 w-full bg-twitter-blue hover:bg-blue-600 text-white font-bold py-3 rounded-full">
+            Poster
+          </button>
+        </nav>
+      </aside>
+
+      <!-- Contenu principal -->
+      <main class="flex-1 main-content hide-scrollbar">
+        <div class="sticky top-0 z-50 bg-black bg-opacity-80 backdrop-blur-md border-b border-gray-800">
+          <div class="max-w-4xl mx-auto px-4 py-3 flex items-center">
+            <button onclick="history.back()" class="mr-8 p-2 rounded-full hover:bg-gray-900 transition">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  fill-rule="evenodd"
+                  d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                  clip-rule="evenodd"
+                />
+
+              </svg>
+            </button>
+            <div>
+              <h1 id="nav-fullname" class="font-bold text-xl">
+                Profil
+              </h1>
+              <p id="nav-tweet-count" class="text-gray-400 text-sm">
+                0 Tweets
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="max-w-4xl mx-auto">
+          <!-- Header utilisateur -->
+          <div class="relative">
+            <img src="assets/téléchargement.jpg" alt="Bannière" class="w-full h-60 object-cover" />
+            <div class="absolute -bottom-16 left-6">
+              <img
+                id="avatar"
+                src="assets/téléchargement.jpg"
+                alt="Avatar"
+                class="w-32 h-32 rounded-full border-4 border-black object-cover shadow-lg"
+              />
+            </div>
+            <!-- Bouton Éditer le profil -->
+            <div class="absolute bottom-4 right-4">
+              <button
+                class="bg-black bg-opacity-50 text-white px-6 py-2 rounded-full border border-gray-600 hover:bg-opacity-70 transition"
+              >
+                Éditer le profil
+              </button>
+            </div>
+          </div>
+
+          <!-- Infos utilisateur -->
+          <div class="mt-20 px-6">
+            <div class="flex items-center mb-1">
+              <h1 id="fullname" class="text-2xl font-bold">
+                {{ user.fullname }}
+              </h1>
+              <span id="verified-badge" class="verified-badge ml-2" style="display: none">
+                <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  />
+
+                </svg>
+              </span>
+            </div>
+            <p id="username" class="text-gray-400 mb-3">
+              {{ `@${auth.user.fullname}` }}
+            </p>
+            <p id="bio" class="mb-4 text-sm leading-relaxed">
+            </p>
+
+            <div class="flex flex-wrap items-center gap-6 text-sm text-gray-400 mb-4">
+              <div class="flex items-center">
+                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path
+                    fill-rule="evenodd"
+                    d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
+                    clip-rule="evenodd"
+                  />
+
+                </svg>
+                <span id="location">Kinshasa, DRC</span>
+              </div>
+              <div class="flex items-center">
+                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path
+                    fill-rule="evenodd"
+                    d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                    clip-rule="evenodd"
+                  />
+
+                </svg>
+                <span id="createdAt">A rejoint en mars 2021</span>
+              </div>
+            </div>
+
+            <div class="flex gap-6 text-sm">
+              <a href="#" class="hover:underline">
+                <span id="following">                  <strong>{{ user.following.length }}</strong>
+                  <span class="text-gray-400">abonnements</span></span>
+              </a>
+              <a href="#" class="hover:underline">
+                <span id="followers">                  <strong>{{ user.followers.length }}</strong>
+                  <span class="text-gray-400">abonnés</span></span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Navigation des onglets -->
+          <div class="mt-8 border-b border-gray-800">
+            <div class="flex">
+              <button class="px-6 py-4 font-semibold border-b-2 border-twitter-blue text-white">
+                Tweets
+              </button>
+              <button class="px-6 py-4 font-semibold text-gray-400 hover:text-white transition">
+                Réponses
+              </button>
+              <button class="px-6 py-4 font-semibold text-gray-400 hover:text-white transition">
+                Médias
+              </button>
+              <button class="px-6 py-4 font-semibold text-gray-400 hover:text-white transition">
+                J'aime
+              </button>
+            </div>
+          </div>
+
+          <!-- Zone des tweets -->
+          <div class="px-6">
+            <div id="loading-spinner" class="flex justify-center my-12">
+              <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-700 h-12 w-12">
+              </div>
+            </div>
+            <div id="user-tweets" class="divide-y divide-gray-800">
+              @if(tweets && tweets.length > 0)
+                @each(tweet in tweets)
+                  <div class="border-b border-gray-700 p-4 hover:bg-gray-900/30 cursor-pointer transition-colors">
+                    <div class="flex gap-3">
+                      <img
+                        src="{{ tweet.user.avatar || 'assets/téléchargement.jpg' }}"
+                        alt="Avatar"
+                        class="w-12 h-12 rounded-full flex-shrink-0 object-cover"
+                      />
+                      <div class="flex-1">
+                        <div class="flex items-center gap-1 mb-1">
+                          <span class="font-bold">{{ tweet.user.fullname }}</span>
+                          @if(tweet.user.isVerified)
+                            <span class="verified-badge ml-2">
+                              <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                  fill-rule="evenodd"
+                                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                  clip-rule="evenodd"
+                                />
+                              </svg>
+                            </span>
+                          @end
+                          <span class="text-gray-500">@{{ tweet.user.username || tweet.user.fullname.toLowerCase() }}</span>
+                          <span class="text-gray-500">·</span>
+                          <span class="text-gray-500">{{ tweet.createdAt.toFormat('dd LLL yyyy') }}</span>
+                        </div>
+
+                        <!-- Indicateur de retweet -->
+                        @if(tweet.$extras && tweet.$extras.isRetweet)
+                          <div class="text-gray-500 text-sm mb-1 flex items-center">
+                            <svg class="w-4 h-4 mr-1" viewBox="0 0 24 24" fill="currentColor">
+                              <path
+                                d="M4.5 3.88l4.432 4.14-1.364 1.46L5.5 7.55V16c0 1.1.896 2 2 2H13v2H7.5c-2.209 0-4-1.79-4-4V7.55L1.432 9.48.068 8.02 4.5 3.88zM16.5 6H11V4h5.5c2.209 0 4 1.79 4 4v8.45l2.068-1.93 1.364 1.46-4.432 4.14-4.432-4.14 1.364-1.46 2.068 1.93V8c0-1.1-.896-2-2-2z"
+                              />
+                            </svg>
+                            Retweeté par {{ tweet.$extras.retweetedBy }}
+                          </div>
+                        @end
+                        
+                        <div class="mb-3">
+                          <p class="text-white">
+                            {{ tweet.content }}
+                          </p>
+
+                          @if(tweet.mediaPath)
+                            @if(tweet.mediaPath.endsWith('.mp4'))
+                              <video controls class="rounded-lg mt-2 max-h-96 w-full object-cover">
+                                <source src="/{{ tweet.mediaPath }}" type="video/mp4" />
+                                Votre navigateur ne supporte pas la lecture vidéo.
+                              </video>
+                            @else
+                              <img
+                                src="/{{ tweet.mediaPath }}"
+                                alt="Image du tweet"
+                                class="rounded-lg mt-2 max-h-96 w-full object-cover"
+                              />
+                            @end
+                          @end
+                          
+                          <!-- Section des interactions -->
+                          <div class="flex items-center justify-between max-w-md text-gray-500 mt-3">
+                            <!-- Vos boutons d'interaction existants -->
+                            <!-- ... -->
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                @end
+              @else
+                <div class="text-center py-8 text-gray-500">
+                  <p>
+                    Aucun tweet à afficher pour le moment.
+                  </p>
+                </div>
+              @end
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- Sidebar droite -->
+      <aside class="w-80 p-4 border-l border-gray-800 hidden lg:block sticky-sidebar hide-scrollbar">
+        <div class="mb-6">
+          <input
+            type="text"
+            placeholder="Rechercher"
+            class="w-full px-4 py-2 rounded-full bg-gray-800 text-white placeholder-gray-400"
+          />
+        </div>
+
+        <div class="bg-[#16181c] rounded-xl overflow-hidden mb-6">
+          <h2 class="text-xl font-bold px-4 py-3">
+            Ce qui se passe
+          </h2>
+          <div class="px-4 py-2 hover:bg-[#1e1f23] cursor-pointer">
+            <p class="text-sm text-gray-400">
+              Tendances
+            </p>
+            <p class="font-semibold text-white">
+              Nairobi
+            </p>
+            <p class="text-sm text-gray-400">
+              51 k publications
+            </p>
+          </div>
+          <div class="px-4 py-2 hover:bg-[#1e1f23] cursor-pointer">
+            <p class="font-semibold text-white">
+              le m23
+            </p>
+            <p class="text-sm text-gray-400">
+              7 228 publications
+            </p>
+          </div>
+          <div class="px-4 py-2 hover:bg-[#1e1f23] cursor-pointer">
+            <p class="font-semibold text-white">
+              Le Rwanda
+            </p>
+            <p class="text-sm text-gray-400">
+              5 629 publications
+            </p>
+          </div>
+          <div class="px-4 py-2 hover:bg-[#1e1f23] cursor-pointer">
+            <p class="font-semibold text-white">
+              AS Monaco
+            </p>
+            <p class="text-sm text-gray-400">
+              3 586 publications
+            </p>
+          </div>
+        </div>
+
+        <div class="bg-[#16181c] rounded-xl overflow-hidden">
+          <h2 class="text-xl font-bold px-4 py-3">
+            Vous pourriez aimer
+          </h2>
+          <div class="px-4 py-2 hover:bg-[#1e1f23] flex justify-between items-center cursor-pointer">
+            <div>
+              <p class="font-semibold text-white">
+                *Urbano*
+              </p>
+              <p class="text-sm text-gray-400">
+                @Urbano_N
+              </p>
+            </div>
+            <button class="bg-white text-black px-4 py-1 rounded-full font-semibold">
+              Suivre
+            </button>
+          </div>
+          <div class="px-4 py-2 hover:bg-[#1e1f23] flex justify-between items-center cursor-pointer">
+            <div>
+              <p class="font-semibold text-white">
+                Bernard BAHATI
+              </p>
+              <p class="text-sm text-gray-400">
+                @Bernard_bahati
+              </p>
+            </div>
+            <button class="bg-white text-black px-4 py-1 rounded-full font-semibold">
+              Suivre
+            </button>
+          </div>
+          <div class="px-4 py-2 hover:bg-[#1e1f23] flex justify-between items-center cursor-pointer">
+            <div>
+              <p class="font-semibold text-white">
+                Billy
+              </p>
+              <p class="text-sm text-gray-400">
+                @RebeuDeter
+              </p>
+            </div>
+            <button class="bg-white text-black px-4 py-1 rounded-full font-semibold">
+              Suivre
+            </button>
+          </div>
+        </div>
+        <div class="text-x-gray text-sm flex flex-wrap gap-x-2 gap-y-1 mt-6">
+          <a href="#" class="hover:underline">Conditions d'utilisation</a>
+          <a href="#" class="hover:underline">Politique de confidentialité</a>
+          <a href="#" class="hover:underline">Accessibilité</a>
+          <a href="#" class="hover:underline">Infos publicitaires</a>
+          <a href="#" class="hover:underline">Plus...</a>
+          <span>© 2025 X Corp.</span>
+        </div>
+      </aside>
+    </div>
+  </body>
+</html>

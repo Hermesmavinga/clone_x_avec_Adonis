@@ -16,10 +16,13 @@ import CreateTweetsController from '#controllers/create_tweets_controller'
 import RetweetsController from '#controllers/retweets_controller'
 import LikesController from '#controllers/likes_controller'
 import CommentsController from '#controllers/comments_controller'
+import FollowsController from '#controllers/follows_controller'
+import ProfilesController from '#controllers/profils_controller'
 
 router.on('/').render('pages/home')
 router.on('/signupView').render('pages/signup')
 router.on('/login').render('pages/login')
+// router.on('/profil').render('pages/profil').use(middleware.auth()).as('profil.view')
 // router.on('/dashboard').render('pages/dashboard').use(middleware.auth()).as('dashboard')
 router.get('/dashboard', [CreateTweetsController, 'index']).use(middleware.auth()).as('dashboard')
 router.post('/login', [SessionController, 'loginStore'])
@@ -45,3 +48,10 @@ router
   .post('/tweets/:id/reply', [CommentsController, 'reply'])
   .as('tweets.reply')
   .use(middleware.auth())
+
+router
+  .post('/follow/:id', [FollowsController, 'toggleFollow'])
+  .as('follow.toggle')
+  .use(middleware.auth())
+
+router.get('/profil', [ProfilesController, 'myProfile']).use(middleware.auth()).as('profil.view')
