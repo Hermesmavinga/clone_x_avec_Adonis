@@ -55,3 +55,9 @@ router
   .use(middleware.auth())
 
 router.get('/profil', [ProfilesController, 'myProfile']).use(middleware.auth()).as('profil.view')
+
+// Route pour voir le profil d'un autre utilisateur
+router
+  .get('/profile/:id', [ProfilesController, 'showUserProfile'])
+  .use(middleware.auth())
+  .as('profiles.show')

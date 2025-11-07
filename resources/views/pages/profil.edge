@@ -679,26 +679,34 @@
               <div
                 class="flex items-center justify-between mb-4 pb-4 border-b border-gray-800 last:border-b-0 last:mb-0 last:pb-0"
               >
-                <div class="flex items-center gap-3">
+                {{-- Lien vers le profil de l'utilisateur suggéré --}}
+                <a
+                  href="{{ route('profiles.show', { id: suggestion.id }) }}"
+                  class="flex items-center gap-3 flex-1 hover:bg-gray-800/50 rounded-lg p-2 transition-colors"
+                >
                   <div class="w-12 h-12 rounded-full bg-gray-700">
+                    {{-- Option: ajouter l'avatar plus tard --}}
+                    {{-- <img src="{{ suggestion.avatar || '/default-avatar.jpg' }}" alt="Avatar" class="w-12 h-12 rounded-full"> --}}
                   </div>
-                  <div>
+                  <div class="flex-1">
                     <div class="font-bold text-sm">
                       {{ suggestion.fullname }}
                     </div>
                     <div class="text-gray-500 text-sm">
-                      {{ `@${suggestion.fullname}` }}
+                      {{ `@${suggestion.username || suggestion.fullname}` }}
                     </div>
                   </div>
-                </div>
-                <form action="{{ route('follow.toggle', { id: suggestion.id }) }}" method="POST">
+                </a>
+
+                {{-- Bouton Suivre/Abonné --}}
+                <form action="{{ route('follow.toggle', { id: suggestion.id }) }}" method="POST" class="ml-2">
                   {{ csrfField() }}
-                  <button
+                <button
                     type="submit"
                     class="bg-white text-black font-bold rounded-full px-4 py-1.5 text-sm hover:bg-gray-200 transition-colors"
                   >
                     {{ suggestion.isFollowing ? 'Abonné' : 'Suivre' }}
-                  </button>
+                </button>
                 </form>
               </div>
             @endeach
