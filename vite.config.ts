@@ -16,4 +16,11 @@ export default defineConfig({
       reload: ['resources/views/**/*.edge'],
     }),
   ],
+  server: {
+    host: true, // obligatoire pour accepter tous les hosts
+    allowedHosts: [
+      'clone-x-avec-adonis-2.onrender.com', // ton domaine Render
+      'localhost', // si tu veux tester localement
+    ],
+  },
 })
