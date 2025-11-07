@@ -24,13 +24,13 @@ export default class RetweetsController {
         .first()
       if (existingRetweet) {
         await existingRetweet.delete()
-        return response.redirect().toRoute('dashboard')
+        return response.redirect().back()
       } else {
         await Retweet.create({
           userId: user.id,
           tweetId: tweetId,
         })
-        return response.redirect().toRoute('dashboard')
+        return response.redirect().back()
       }
     } catch (error) {
       console.error('Erreur lors du toggle retweet :', error)

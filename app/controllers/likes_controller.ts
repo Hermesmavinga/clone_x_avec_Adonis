@@ -22,14 +22,14 @@ export default class LikesController {
         // Retirer le like (unlike)
         await existingLike.delete()
         console.log('Like supprimé avec succès')
-        // return response.json({ success: true, action: 'unliked' })
-        return response.redirect().toRoute('dashboard')
+
+        return response.redirect().back()
       } else {
         // Créer le like
         await Like.create({ userId: user.id, tweetId: tweetId })
         console.log('Like créé avec succès')
-        // return response.json({ success: true, action: 'liked' })
-        return response.redirect().toRoute('dashboard')
+
+        return response.redirect().back()
       }
     } catch (error) {
       console.error('Erreur toggleLike:', error)
