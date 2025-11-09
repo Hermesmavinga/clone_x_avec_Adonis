@@ -120,10 +120,17 @@
       <!-- Sidebar gauche -->
       <aside class="w-72 p-4 border-r border-gray-800 hidden md:block sticky-sidebar hide-scrollbar">
         <nav class="space-y-4">
-          <div class="text-2xl font-bold text-white mb-6">
-            <img src="assets/Vector (1).png" alt="" />
+          <div class="p-3 mb-1">
+            <svg class="w-7 h-7" viewBox="0 0 24 24" fill="white">
+              <path
+                d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+              />
+            </svg>
           </div>
-          <a href="accueil.html" class="flex items-center p-3 rounded-full hover:bg-x-dark text-xl font-bold">
+          <a
+            href="{{ route('dashboard') }}"
+            class="flex items-center p-3 rounded-full hover:bg-x-dark text-xl font-bold"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -242,7 +249,10 @@
             </svg>
             <span class="ml-4">Communautés</span>
           </a>
-          <a href="profil.html" class="flex items-center p-3 rounded-full hover:bg-x-dark text-xl">
+          <a
+            href="{{ route('profil.view') }}"
+            class="flex items-center p-3 rounded-full hover:bg-x-dark text-xl"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -259,51 +269,89 @@
             </svg>
             <span class="ml-4">Profil</span>
           </a>
-          <a href="#" class="flex items-center p-3 rounded-full hover:bg-x-dark text-xl">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="w-6 h-6"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
-              />
-            </svg>
-            <span class="ml-4">Plus</span>
-          </a>
           <button class="mt-6 w-full bg-twitter-blue hover:bg-blue-600 text-white font-bold py-3 rounded-full">
             Poster
           </button>
+
+          <!-- User Profile at Bottom -->
+          <div
+            class="mt-auto mb-4 flex items-center gap-3 p-3 rounded-full hover:bg-gray-900 cursor-pointer transition-colors"
+          >
+            <div class="w-10 h-10 rounded-full bg-gray-600">
+            </div>
+            <div class="flex-1">
+              <div class="font-bold text-lg">
+
+                @if(auth.isAuthenticated)
+                  <p>
+                    {{ auth.user.fullname }}
+                  </p>
+                @end
+                
+              </div>
+              <div class="text-gray-500 text-sm">
+                @if(auth.isAuthenticated)
+                  <p>
+                    {{ `@${auth.user.fullname}` }}
+                  </p>
+                @end
+              </div>
+            </div>
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+              <circle cx="12" cy="12" r="1.5" />
+              <circle cx="6" cy="12" r="1.5" />
+              <circle cx="18" cy="12" r="1.5" />
+            </svg>
+          </div>
         </nav>
       </aside>
 
       <!-- Contenu principal -->
       <main class="flex-1 main-content hide-scrollbar">
         <div class="sticky top-0 z-50 bg-black bg-opacity-80 backdrop-blur-md border-b border-gray-800">
-          <div class="max-w-4xl mx-auto px-4 py-3 flex items-center">
-            <button onclick="history.back()" class="mr-8 p-2 rounded-full hover:bg-gray-900 transition">
-              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  fill-rule="evenodd"
-                  d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                  clip-rule="evenodd"
-                />
-
-              </svg>
-            </button>
-            <div>
-              <h1 id="nav-fullname" class="font-bold text-xl">
-                {{ user.fullname }}
-              </h1>
-              <p id="nav-tweet-count" class="text-gray-400 text-sm">
-                {{ `${tweets.length} Tweets` }}
-              </p>
+          <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center">
+              <button onclick="history.back()" class="mr-8 p-2 rounded-full hover:bg-gray-900 transition">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path
+                    fill-rule="evenodd"
+                    d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </button>
+              <div>
+                <h1 class="font-bold text-xl">
+                  {{ user.fullname }}
+                </h1>
+                <p class="text-gray-400 text-sm">
+                  @if(!listType)
+                    {{ tweets.length }} Tweets
+                  @elseif(listType === 'followers')
+                    {{ user.followers.length }} Abonnés
+                  @elseif(listType === 'following')
+                    {{ user.following.length }} Abonnements
+                  @end
+                </p>
+              </div>
             </div>
+
+            <!-- 🔥 BOUTON DE RETOUR AUX TWEETS - AJOUTEZ CETTE PARTIE -->
+            @if(listType)
+              <a
+                href="?"
+                class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-full text-sm font-medium transition-colors flex items-center gap-2"
+              >
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path
+                    fill-rule="evenodd"
+                    d="M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Voir les Tweets
+              </a>
+            @end
           </div>
         </div>
 
@@ -376,13 +424,13 @@
                 <span id="createdAt">A rejoint en {{ user.createdAt.toFormat('dd LLL yyyy') }}</span>
               </div>
             </div>
-
+            <!-- Stats avec liens cliquables -->
             <div class="flex gap-6 text-sm">
-              <a href="#" class="hover:underline">
+              <a href="?list=following" class="hover:underline">
                 <span id="following">                  <strong>{{ user.following.length }}</strong>
                   <span class="text-gray-400">abonnements</span></span>
               </a>
-              <a href="#" class="hover:underline">
+              <a href="?list=followers" class="hover:underline">
                 <span id="followers">                  <strong>{{ user.followers.length }}</strong>
                   <span class="text-gray-400">abonnés</span></span>
               </a>
@@ -407,9 +455,9 @@
             </div>
           </div>
 
-          <!-- Zone des tweets -->
-          <div class="px-6">
-            <div id="user-tweets" class="divide-y divide-gray-800">
+          @if(!listType)
+            <!-- Zone des tweets normale -->
+            <div class="divide-y divide-gray-800">
               @if(tweets && tweets.length > 0)
                 @each(tweet in tweets)
                   <div class="border-b border-gray-700 p-4 hover:bg-gray-900/30 cursor-pointer transition-colors">
@@ -422,7 +470,7 @@
                       <div class="flex-1">
                         <div class="flex items-center gap-1 mb-1">
                           <span class="font-bold">{{ tweet.user?.fullname }}</span>
-                          @if(tweet.user.isVerified)
+                          @if(tweet.user?.isVerified)
                             <span class="verified-badge ml-2">
                               <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
                                 <path
@@ -488,16 +536,16 @@
                                 <span class="text-sm">{{ tweet.replies?.length || 0 }}</span>
                               </button>
 
-                              {{-- SECTION COMMENTAIRES CACHÉE --}}
+                              <!-- SECTION COMMENTAIRES CACHÉE -->
                               <div id="comment-section-{{ tweet.id }}" class="hidden mt-4 border-t border-gray-700 pt-3">
 
-                                {{-- FORMULAIRE DE RÉPONSE --}}
+                                <!-- FORMULAIRE DE RÉPONSE -->
                                 <div class="flex gap-3 mb-4">
                                   <div class="w-8 h-8 rounded-full bg-gray-600 flex-shrink-0">
                                   </div>
                                   <form action="{{ route('tweets.reply', { id: tweet.id }) }}" method="POST" class="flex-1">
                                     {{ csrfField() }}
-                            <input
+                          <input
                                       type="text"
                                       name="content"
                                       placeholder="Postez votre réponse"
@@ -510,12 +558,12 @@
                                         class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1.5 rounded-full text-sm font-medium transition-colors"
                                       >
                                         Répondre
-                                </button>
+                            </button>
                                     </div>
                                   </form>
                                 </div>
 
-                                {{-- LISTE DES COMMENTAIRES EXISTANTS --}}
+                                <!-- LISTE DES COMMENTAIRES EXISTANTS -->
                                 @if(tweet.replies && tweet.replies.length > 0)
                                   <div class="space-y-4">
                                     @each(reply in tweet.replies)
@@ -543,8 +591,8 @@
                                 @endif
                               </div>
                             </div>
-                            <!-- Vos boutons d'interaction existants -->
-                            {{-- BOUTON RETWEET (EXISTANT) --}}
+
+                            <!-- BOUTON RETWEET -->
                             <form action="{{ route('tweets.retweet',{id:tweet.id}) }}" method="POST">
                               {{ csrfField() }}
                               <button class="flex items-center gap-2 hover:text-green-500 group transition-colors">
@@ -555,10 +603,11 @@
                                     />
                                   </svg>
                                 </div>
-                                <span class="text-sm">{{ tweet.retweetsby?.length }}</span>
+                                <span class="text-sm">{{ tweet.retweetsby?.length || 0 }}</span>
                               </button>
                             </form>
-                            {{-- BOUTON LIKE (EXISTANT) --}}
+
+                            <!-- BOUTON LIKE -->
                             <form action="{{ route('tweets.like', { id: tweet.id }) }}" method="POST">
                               {{ csrfField() }}
                               <button class="flex items-center space-x-1 hover:text-pink-500">
@@ -567,10 +616,11 @@
                                     d="M16.697 5.5c-1.222-.06-2.679.51-3.89 2.16l-.805 1.09-.806-1.09C9.984 6.01 8.526 5.44 7.304 5.5c-1.243.07-2.349.78-2.91 1.91-.552 1.12-.633 2.78.479 4.82 1.074 1.97 3.257 4.27 7.129 6.61 3.87-2.34 6.052-4.64 7.126-6.61 1.111-2.04 1.03-3.7.477-4.82-.561-1.13-1.666-1.84-2.908-1.91zm4.187 7.69c-1.351 2.48-4.001 5.12-8.379 7.67l-.503.3-.504-.3c-4.379-2.55-7.029-5.19-8.382-7.67-1.36-2.5-1.41-4.86-.514-6.67.887-1.79 2.647-2.91 4.601-3.01 1.651-.09 3.368.56 4.798 2.01 1.429-1.45 3.146-2.1 4.796-2.01 1.954.1 3.714 1.22 4.601 3.01.896 1.81.846 4.17-.514 6.67z"
                                   />
                                 </svg>
-                                <span>{{ tweet.likes.length }}</span>
+                                <span>{{ tweet.likes?.length || 0 }}</span>
                               </button>
                             </form>
-                            {{-- BOUTON PARTAGER (EXISTANT) --}}
+
+                            <!-- BOUTON PARTAGER -->
                             <button class="hover:text-blue-500 group transition-colors">
                               <div class="p-2 group-hover:bg-blue-900/30 rounded-full transition-colors">
                                 <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
@@ -580,7 +630,8 @@
                                 </svg>
                               </div>
                             </button>
-                            {{-- BOUTON SUPPRIMER (EXISTANT) --}}
+
+                            <!-- BOUTON SUPPRIMER -->
                             @if(tweet.userId === auth.user.id)
                               <form
                                 action="{{ route('tweets.delete', [tweet.id]) }}"
@@ -588,7 +639,7 @@
                                 method="POST"
                               >
                                 {{ csrfField() }}
-                                <button class="hover:text-blue-500 group transition-colors">
+                                <button class="hover:text-red-500 group transition-colors">
                                   <div class="p-2 group-hover:bg-red-900/30 rounded-full transition-colors">
                                     <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
                                       <path
@@ -599,7 +650,6 @@
                                 </button>
                               </form>
                             @end
-                            <!-- ... -->
                           </div>
                         </div>
                       </div>
@@ -614,7 +664,120 @@
                 </div>
               @end
             </div>
-          </div>
+          @else
+            <!-- Zone des listes d'abonnés/abonnements -->
+            <div>
+              @if(listType === 'followers')
+                <!-- Liste des abonnés -->
+                <div class="divide-y divide-gray-800">
+                  @if(user.followers && user.followers.length > 0)
+                    @each(follow in user.followers)
+                      @if(follow.follower)
+                        <div class="flex items-center justify-between p-4 hover:bg-gray-900/30 transition-colors">
+                          <div class="flex items-center gap-3 flex-1">
+                            @if(follow.follower.avatarUrl)
+                              <img src="{{ follow.follower.avatarUrl }}" alt="Avatar" class="w-12 h-12 rounded-full object-cover" />
+                            @else
+                              <div class="w-12 h-12 rounded-full bg-gray-700">
+                              </div>
+                            @end
+                            <div class="flex-1">
+                              <div class="font-bold text-sm">
+                                {{ follow.follower.fullname }}
+                              </div>
+                              <div class="text-gray-500 text-sm">
+                                {{ `@${follow.follower.fullname}` }}
+                              </div>
+                              @if(follow.follower.bio)
+                                <div class="text-gray-500 text-xs mt-1 line-clamp-2">
+                                  {{ follow.follower.bio }}
+                                </div>
+                              @end
+                            </div>
+                          </div>
+                          <!-- Bouton Follow/Unfollow -->
+                          @if(follow.follower.id !== auth.user.id)
+                            <form action="{{ route('follow.toggle', { id: follow.follower.id }) }}" method="POST">
+                              {{ csrfField() }}
+                    <input type="hidden" name="redirect_to" value="{{ request.url() }}" />
+                              <button
+                                type="submit"
+                                class="bg-white text-black font-bold rounded-full px-4 py-1.5 text-sm hover:bg-gray-200 transition-colors whitespace-nowrap"
+                              >
+                                Suivre
+                    </button>
+                            </form>
+                          @else
+                            <span class="text-gray-500 text-sm px-4">Vous</span>
+                          @end
+                        </div>
+                      @end
+                    @end
+                  @else
+                    <div class="text-center py-8 text-gray-500">
+                      <p>
+                        Aucun abonné pour le moment.
+                      </p>
+                    </div>
+                  @end
+                </div>
+              @elseif(listType === 'following')
+                <!-- Liste des abonnements -->
+                <div class="divide-y divide-gray-800">
+                  @if(user.following && user.following.length > 0)
+                    @each(follow in user.following)
+                      @if(follow.followed)
+                        <div class="flex items-center justify-between p-4 hover:bg-gray-900/30 transition-colors">
+                          <div class="flex items-center gap-3 flex-1">
+                            @if(follow.followed.avatarUrl)
+                              <img src="{{ follow.followed.avatarUrl }}" alt="Avatar" class="w-12 h-12 rounded-full object-cover" />
+                            @else
+                              <div class="w-12 h-12 rounded-full bg-gray-700">
+                              </div>
+                            @end
+                            <div class="flex-1">
+                              <div class="font-bold text-sm">
+                                {{ follow.followed.fullname }}
+                              </div>
+                              <div class="text-gray-500 text-sm">
+                                {{ `@${follow.followed.fullname}` }}
+                              </div>
+                              @if(follow.followed.bio)
+                                <div class="text-gray-500 text-xs mt-1 line-clamp-2">
+                                  {{ follow.followed.bio }}
+                                </div>
+                              @end
+                            </div>
+                          </div>
+                          <!-- Bouton Unfollow -->
+                          @if(follow.followed.id !== auth.user.id)
+                            <form action="{{ route('follow.toggle', { id: follow.followed.id }) }}" method="POST">
+                              {{ csrfField() }}
+                    <input type="hidden" name="redirect_to" value="{{ request.url() }}" />
+                              <button
+                                type="submit"
+                                class="bg-white text-black font-bold rounded-full px-4 py-1.5 text-sm hover:bg-gray-200 transition-colors whitespace-nowrap"
+                              >
+                                Abonné
+                    </button>
+                            </form>
+                          @else
+                            <span class="text-gray-500 text-sm px-4">Vous</span>
+                          @end
+                        </div>
+                      @end
+                    @end
+                  @else
+                    <div class="text-center py-8 text-gray-500">
+                      <p>
+                        Aucun abonnement pour le moment.
+                      </p>
+                    </div>
+                  @end
+                </div>
+              @end
+            </div>
+          @end
         </div>
       </main>
 

@@ -27,7 +27,7 @@
         <!-- Navigation Menu -->
         <nav class="flex flex-col gap-1">
           <a
-            href="#"
+            href="{{ route('dashboard') }}"
             class="flex items-center gap-5 px-3 py-3 rounded-full hover:bg-gray-900 transition-colors"
           >
             <svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
@@ -60,6 +60,23 @@
               />
             </svg>
             <span class="text-xl font-normal">Notifications</span>
+          </a>
+          <a href="#" class="flex items-center p-3 rounded-full hover:bg-x-dark text-xl">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-6 h-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.5l-.394-.933a2.25 2.25 0 00-1.423-1.423L13.5 19.5l.933-.394a2.25 2.25 0 001.423-1.423l.394-.933.394.933a2.25 2.25 0 001.423 1.423l.933.394-.933.394a2.25 2.25 0 00-1.423 1.423z"
+              />
+            </svg>
+            <span class="ml-4">Grok</span>
           </a>
 
           <a
@@ -99,30 +116,6 @@
           </a>
 
           <a
-            href="#"
-            class="flex items-center gap-5 px-3 py-3 rounded-full hover:bg-gray-900 transition-colors"
-          >
-            <svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
-              <path
-                d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
-              />
-            </svg>
-            <span class="text-xl font-normal">Premium</span>
-          </a>
-
-          <a
-            href="#"
-            class="flex items-center gap-5 px-3 py-3 rounded-full hover:bg-gray-900 transition-colors"
-          >
-            <svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
-              <path
-                d="M12 1.696L.622 8.807l1.06 1.696L3 9.679V19.5C3 20.881 4.119 22 5.5 22h13c1.381 0 2.5-1.119 2.5-2.5V9.679l1.318.824 1.06-1.696L12 1.696zM12 16.5c-1.933 0-3.5-1.567-3.5-3.5s1.567-3.5 3.5-3.5 3.5 1.567 3.5 3.5-1.567 3.5-3.5 3.5z"
-              />
-            </svg>
-            <span class="text-xl font-normal">Organisations</span>
-          </a>
-
-          <a
             href="{{ route('profil.view') }}"
             class="flex items-center gap-5 px-3 py-3 rounded-full hover:bg-gray-900 transition-colors"
           >
@@ -132,21 +125,6 @@
               />
             </svg>
             <span class="text-xl font-normal">Profil</span>
-          </a>
-
-          <a
-            href="#"
-            class="flex items-center gap-5 px-3 py-3 rounded-full hover:bg-gray-900 transition-colors"
-          >
-            <svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
-              <circle cx="17" cy="12" r="1.5" />
-              <circle cx="12" cy="12" r="1.5" />
-              <circle cx="7" cy="12" r="1.5" />
-              <path
-                d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zm0-2c-4.418 0-8-3.582-8-8s3.582-8 8-8 8 3.582 8 8-3.582 8-8 8z"
-              />
-            </svg>
-            <span class="text-xl font-normal">Plus</span>
           </a>
         </nav>
 
@@ -598,7 +576,6 @@
                 3,380 publications
               </div>
             </div>
-
             <button class="text-blue-500 hover:underline text-sm">Voir plus</button>
           </div>
         </div>
