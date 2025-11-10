@@ -18,6 +18,7 @@ import LikesController from '#controllers/likes_controller'
 import CommentsController from '#controllers/comments_controller'
 import FollowsController from '#controllers/follows_controller'
 import ProfilesController from '#controllers/profils_controller'
+import BlocksController from '#controllers/blocks_controller'
 
 router.on('/').render('pages/home')
 router.on('/signupView').render('pages/signup')
@@ -54,10 +55,19 @@ router
   .as('follow.toggle')
   .use(middleware.auth())
 
-router.get('/profil', [ProfilesController, 'myProfile']).use(middleware.auth()).as('profil.view')
+router
+  .get('/profil', [ProfilesController, 'myProfile'])
+  .use([middleware.auth(), middleware.checkBlocked()])
+  .as('profil.view')
 
 // Route pour voir le profil d'un autre utilisateur
 router
   .get('/profile/:id', [ProfilesController, 'showUserProfile'])
-  .use(middleware.auth())
+  .use([middleware.auth(), middleware.checkBlocked()])
   .as('profiles.show')
+
+// Routes pour les blocages
+router
+  .post('/blocks/toggle/:id', [BlocksController, 'toggle'])
+  .use(middleware.auth())
+  .as('blocks.toggle')
