@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      Profil Bloqué
+    </title>
+    <script src="https://cdn.tailwindcss.com">
+
+    </script>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body
+    class="min-h-screen bg-gradient-to-br from-gray-900 to-black flex items-center justify-center p-4"
+  >
+    <div class="max-w-md w-full">
+      <!-- Icône animée -->
+      <div class="flex justify-center mb-8">
+        <div class="relative">
+          <div class="w-24 h-24 bg-red-500/20 rounded-full flex items-center justify-center">
+            <div class="w-16 h-16 bg-red-500/40 rounded-full flex items-center justify-center">
+              <div class="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div class="absolute -top-2 -right-2">
+            <div class="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center animate-pulse">
+              <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  fill-rule="evenodd"
+                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contenu texte -->
+      <div class="text-center mb-8">
+        <h1 class="text-2xl font-bold text-white mb-3">
+          Accès Restreint
+        </h1>
+        <div class="space-y-3">
+          <p class="text-gray-300 text-lg leading-relaxed">
+            🛑 Ce profil n'est pas accessible
+          </p>
+          <p class="text-gray-400 text-sm">
+            {{ message || "L'accès à ce compte a été restreint en raison de paramètres de confidentialité ou de blocage mutuel." }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="space-y-4">
+        <a
+          href="{{ route('dashboard') }}"
+          class="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg shadow-blue-500/25 flex items-center justify-center gap-2"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+            />
+          </svg>
+          Retour à l'accueil
+        </a>
+
+        <button
+          onclick="history.back()"
+          class="w-full border border-gray-600 hover:border-gray-500 text-gray-300 hover:text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 bg-gray-800/50 hover:bg-gray-700/50 flex items-center justify-center gap-2"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+          Page précédente
+        </button>
+      </div>
+
+      <!-- Message supplémentaire -->
+      <div class="mt-8 p-4 bg-gray-800/30 rounded-lg border border-gray-700">
+        <p class="text-gray-400 text-xs">
+          💡 Si vous pensez qu'il s'agit d'une erreur, vérifiez vos paramètres de confidentialité ou contactez le support.
+        </p>
+      </div>
+    </div>
+
+    <!-- Effets visuels -->
+    <div class="fixed inset-0 -z-10 overflow-hidden">
+      <div class="absolute -top-40 -right-40 w-80 h-80 bg-red-500/5 rounded-full blur-3xl">
+      </div>
+      <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-500/5 rounded-full blur-3xl">
+      </div>
+    </div>
+  </body>
+</html>
