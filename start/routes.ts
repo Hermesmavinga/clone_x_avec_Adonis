@@ -19,6 +19,8 @@ import CommentsController from '#controllers/comments_controller'
 import FollowsController from '#controllers/follows_controller'
 import ProfilesController from '#controllers/profils_controller'
 import BlocksController from '#controllers/blocks_controller'
+import HashtagsController from '#controllers/hashtags_controller'
+// import HashtagsController from '#controllers/hashtags_controller'
 
 router.on('/').render('pages/home')
 router.on('/signupView').render('pages/signup')
@@ -71,3 +73,8 @@ router
   .post('/blocks/toggle/:id', [BlocksController, 'toggle'])
   .use(middleware.auth())
   .as('blocks.toggle')
+
+router
+  .get('/hashtag/:tag', [HashtagsController, 'showHashtags'])
+  .as('hashtags.show')
+  .use(middleware.auth())

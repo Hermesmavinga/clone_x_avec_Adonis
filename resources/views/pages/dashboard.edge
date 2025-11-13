@@ -266,8 +266,8 @@
                   </div>
 
                   <div class="mb-3">
-                    <p>
-                      {{ tweet.content }}
+                    <p x-html="tweet.contentClean" class=text-white>
+                      {{{ tweet.contentClean }}}
                     </p>
                     @if(tweet.mediaPath)
                       @if(tweet.mediaPath.endsWith('.mp4'))
