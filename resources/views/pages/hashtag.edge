@@ -50,9 +50,9 @@
                   class="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover"
                 />
                 <span class="font-semibold text-sm sm:text-base">
-                  {{ tweet.user.nom || tweet.user.fullname || tweet.user.username }}
+                  {{ tweet.user.fullname || tweet.user.fullname || tweet.user.fullname }}
                 </span>
-                <span class="text-gray-400 text-sm">@{{ tweet.user.username || tweet.user.fullname }}</span>
+                <span class="text-gray-400 text-sm">{{ `@${tweet.user.fullname}` }}</span>
                 <span class="text-gray-400">·</span>
                 <span class="text-gray-400 text-sm">{{ tweet.created_at }}</span>
               </div>
@@ -361,6 +361,29 @@
           const tweetId = btn.dataset.tweetId;
           window.location.href = `/tweets/${tweetId}/reply`;
         });
+      });
+    </script>
+
+    <script>
+      function toggleCommentSection(tweetId) {
+        const commentSection = document.getElementById(`comment-section-${tweetId}`);
+        // Fermer toutes les autres sections de commentaire
+        const allSections = document.querySelectorAll('[id^="comment-section-"]');
+        allSections.forEach(section => {
+          if (section.id !== `comment-section-${tweetId}`) {
+            section.classList.add("hidden");
+          }
+        });
+        // Basculer l'affichage de la section actuelle
+        commentSection.classList.toggle("hidden");
+      }
+      // Fermer les sections de commentaire si on clique ailleurs
+
+      document.addEventListener("click", function(event) {
+        if (!event.target.closest('[id^="comment-section-"]') && !event.target.closest('button[onclick*="toggleCommentSection"]')) {
+          const allSections = document.querySelectorAll('[id^="comment-section-"]');
+          allSections.forEach(section => section.classList.add("hidden"));
+        }
       });
     </script>
   </body>

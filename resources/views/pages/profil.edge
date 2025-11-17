@@ -277,17 +277,18 @@
           <div
             class="mt-auto mb-4 flex items-center gap-3 p-3 rounded-full hover:bg-gray-900 cursor-pointer transition-colors"
           >
+            <!-- Avatar -->
             <div class="w-10 h-10 rounded-full bg-gray-600">
             </div>
+
+            <!-- User Info -->
             <div class="flex-1">
               <div class="font-bold text-lg">
-
                 @if(auth.isAuthenticated)
                   <p>
                     {{ auth.user.fullname }}
                   </p>
                 @end
-                
               </div>
               <div class="text-gray-500 text-sm">
                 @if(auth.isAuthenticated)
@@ -297,7 +298,25 @@
                 @end
               </div>
             </div>
-            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+
+            <!-- Logout Icon -->
+            @if(auth.isAuthenticated)
+              <form method="GET" action="/logout">
+                {{ csrfField() }}
+              <button type="submit" class="text-gray-400 hover:text-white transition-colors" title="Déconnexion">
+                  <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M15 12H3m12 0l-4-4m4 4l-4 4m8-7v10a2 2 0 01-2 2H7"
+                    />
+                  </svg>
+                </button>
+              </form>
+            @end
+            
+            <!-- Three dots -->
+            <svg class="w-5 h-5 ml-2" viewBox="0 0 24 24" fill="currentColor">
               <circle cx="12" cy="12" r="1.5" />
               <circle cx="6" cy="12" r="1.5" />
               <circle cx="18" cy="12" r="1.5" />
