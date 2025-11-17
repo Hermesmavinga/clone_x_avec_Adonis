@@ -5,6 +5,7 @@ import { cuid } from '@adonisjs/core/helpers'
 import { promises as fs } from 'fs'
 import User from '#models/user'
 import Follow from '#models/follow'
+import Hashtag from '#models/hashtag'
 
 export default class CreateTweetsController {
   public async store({ request, auth, response }: HttpContext) {
@@ -34,37 +35,40 @@ export default class CreateTweetsController {
     }
 
     // 🐦 5. Créer le tweet (avec ou sans média)
-    await Tweet.create({
+    const tweet = await Tweet.create({
       content,
       mediaPath,
       userId: auth.user!.id,
     })
+    // 🔥🔥🔥 AJOUTEZ ICI LE CODE D'EXTRACTION DES HASHTAGS 🔥🔥🔥
+    // Extraction des hashtags (#mot)
+    const hashtags = (content.match(/#\w+/g) || []).map((tag: string) => tag.toLowerCase())
+
+    if (hashtags.length) {
+      for (const tag of hashtags) {
+        const texteHashtag = tag.replace('#', '')
+        const hashtag = await Hashtag.firstOrCreate({ texteHashtag }, { texteHashtag })
+        await tweet.related('hashtags').sync([hashtag.id], false)
+      }
+    }
 
     return response.redirect().toRoute('dashboard')
   }
-
-  // public async index({ view }: HttpContext) {
-  //   const tweets = await Tweet.query()
-  //     .preload('user')
-  //     .preload('retweetsby')
-  //     .preload('likes')
-  //     .preload('replies', (repliesQuery) => {
-  //       repliesQuery.preload('user')
-  //     })
-  //     .orderBy('created_at', 'desc')
-
-  //   return view.render('pages/dashboard', { tweets })
-  // }
 
   public async index({ view, auth }: HttpContext) {
     const tweets = await Tweet.query()
       .whereNull('parentId') // Seulement les tweets principaux
       .preload('user')
       .preload('replies', (repliesQuery) => {
-        repliesQuery.preload('user').preload('likes').orderBy('created_at', 'asc')
+        repliesQuery
+          .preload('user')
+          .preload('likes')
+          .preload('hashtags')
+          .orderBy('created_at', 'asc')
       })
       .preload('retweetsby')
       .preload('likes')
+      .preload('hashtags')
       .orderBy('created_at', 'desc')
 
     //  LISTE DES USERS SUGGESTION
@@ -82,40 +86,47 @@ export default class CreateTweetsController {
         }
       })
     )
+    //  Ici on transforme le content en contentClean
+    tweets.forEach((tweet) => {
+      if (tweet.hashtags && tweet.hashtags.length > 0) {
+        let content = tweet.content
+        tweet.hashtags.forEach((h) => {
+          const regex = new RegExp(`#${h.texteHashtag}`, 'gi')
+          content = content.replace(
+            regex,
+            `<a href="/hashtag/${h.texteHashtag}" class="text-blue-400 hover:underline">#${h.texteHashtag}</a>`
+          )
+        })
+        tweet.contentClean = content
+      } else {
+        tweet.contentClean = tweet.content
+      }
+      // contentClean pour les replies
+      if (tweet.replies && tweet.replies.length > 0) {
+        tweet.replies.forEach((reply: any) => {
+          if (reply.hashtags && reply.hashtags.length > 0) {
+            let content = reply.content
+            reply.hashtags.forEach((h: any) => {
+              const regex = new RegExp(`#${h.texteHashtag}`, 'gi')
+              content = content.replace(
+                regex,
+                `<a href="/hashtag/${h.texteHashtag}" class="text-blue-400 hover:underline">#${h.texteHashtag}</a>`
+              )
+            })
+            reply.contentClean = content
+          } else {
+            reply.contentClean = reply.content
+          }
+        })
+      }
+    })
 
     return view.render('pages/dashboard', {
-      tweets,
+      user: auth.user,
+      tweets, // on envoie les tweets à la vue
       suggestions: suggestionsFollowState,
     })
   }
-
-  //   public async destroy({ params, auth, response }: HttpContext) {
-  //     try {
-  //       const tweet = await Tweet.findOrFail(params.id)
-  //       // 🔹 Vérifier si l'utilisateur est bien le propriétaire du tweet
-  //       if (tweet.userId !== auth.user!.id) {
-  //         return response.unauthorized({ message: 'Action non autorisée' })
-  //       }
-
-  //       // 🔹 Supprimer le fichier média s’il existe
-  //       if (tweet.mediaPath) {
-  //         const mediaFullPath = app.makePath(tweet.mediaPath)
-  //         try {
-  //           await fs.unlink(mediaFullPath)
-  //         } catch (err) {
-  //           console.warn('⚠️ Impossible de supprimer le fichier média :', err.message)
-  //         }
-  //       }
-  //       // 🔹 Supprimer le tweet
-  //       await tweet.delete()
-
-  //       // 🔹 Retourner une réponse (ou redirection)
-  //       return response.redirect().back()
-  //     } catch (error) {
-  //       return response.internalServerError({ message: 'Erreur lors de la suppression du tweet' })
-  //     }
-  //   }
-  // }
 
   public async destroy({ params, auth, response, session }: HttpContext) {
     try {

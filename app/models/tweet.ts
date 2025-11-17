@@ -6,7 +6,10 @@ import { belongsTo } from '@adonisjs/lucid/orm'
 import Like from '#models/like'
 import type { HasMany } from '@adonisjs/lucid/types/relations'
 import { hasMany } from '@adonisjs/lucid/orm'
+import type { ManyToMany } from '@adonisjs/lucid/types/relations'
+import { manyToMany } from '@adonisjs/lucid/orm'
 import Retweet from '#models/retweet'
+import Hashtag from './hashtag.js'
 
 export default class Tweet extends BaseModel {
   @column({ isPrimary: true })
@@ -52,11 +55,19 @@ export default class Tweet extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
 
+  public contentClean?: string
+
   @belongsTo(() => User)
   declare user: BelongsTo<typeof User>
 
   @hasMany(() => Like)
   declare likes: HasMany<typeof Like>
+
+  @manyToMany(() => Hashtag, {
+    pivotTable: 'tweet_hashtags',
+    pivotTimestamps: true, // pour enregistrer created_at et updated_at dans la table pivot
+  })
+  declare hashtags: ManyToMany<typeof Hashtag>
 
   @hasMany(() => Retweet)
   declare retweetsby: HasMany<typeof Retweet>
