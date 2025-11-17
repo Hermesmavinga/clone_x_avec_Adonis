@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      Grok AI - Assistant Intelligence Tweet
+    </title>
+    <script src="https://cdn.tailwindcss.com">
+
+    </script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js">
+
+    </script>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+      
+      body {
+        font-family: 'Inter', sans-serif;
+      }
+      
+      .gradient-bg {
+        background: linear-gradient(135deg, #1e3a8a 0%, #7e22ce 50%, #0ea5e9 100%);
+      }
+      
+      .glass-effect {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      
+      .result-box {
+        transition: all 0.3s ease;
+        border-left: 4px solid transparent;
+      }
+      
+      .result-box.success {
+        border-left-color: #10b981;
+      }
+      
+      .result-box.error {
+        border-left-color: #ef4444;
+      }
+      
+      .result-box.loading {
+        border-left-color: #3b82f6;
+      }
+      
+      .btn-glow:hover {
+        box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+      }
+      
+      .pulse-loading {
+        animation: pulse 2s infinite;
+      }
+      
+      @keyframes pulse {
+        0%, 100% {
+          opacity: 1;
+        }
+      
+        50% {
+          opacity: 0.7;
+        }
+      }
+      
+      .fade-in {
+        animation: fadeIn 0.5s ease-in;
+      }
+      
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+      
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+  <body class="bg-gradient-to-br from-gray-900 to-black min-h-screen text-white">
+    <!-- Header -->
+    <header class="glass-effect sticky top-0 z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center py-4">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 gradient-bg rounded-lg flex items-center justify-center">
+              <i data-lucide="sparkles" class="w-6 h-6 text-white"></i>
+            </div>
+            <div>
+              <h1
+                class="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent"
+              >
+                Grok AI
+              </h1>
+              <p class="text-xs text-gray-400">
+                Powered by Mistral
+              </p>
+            </div>
+          </div>
+          <nav class="hidden md:flex space-x-8">
+            <a href="/dashboard" class="text-gray-300 hover:text-white transition-colors">Dashboard</a>
+            <a href="/profil" class="text-gray-300 hover:text-white transition-colors">Profil</a>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <!-- Hero Section -->
+      <div class="text-center mb-12 fade-in">
+        <h1
+          class="text-4xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent"
+        >
+          Boostez vos tweets avec l'IA
+        </h1>
+        <p class="text-xl text-gray-300 max-w-2xl mx-auto">
+          Générez du contenu percutant, trouvez les meilleurs hashtags et optimisez votre stratégie Twitter
+        </p>
+      </div>
+
+      <!-- Main Content -->
+      <div class="grid lg:grid-cols-3 gap-8 mb-8">
+        <!-- Input Section -->
+        <div class="lg:col-span-2">
+          <div class="glass-effect rounded-2xl p-6 md:p-8">
+            <div class="flex items-center mb-6">
+              <div class="w-12 h-12 gradient-bg rounded-xl flex items-center justify-center mr-4">
+                <i data-lucide="edit-3" class="w-6 h-6 text-white"></i>
+              </div>
+              <div>
+                <h2 class="text-2xl font-semibold">
+                  Votre contenu
+                </h2>
+                <p class="text-gray-400">
+                  Décrivez votre idée ou collez votre tweet
+                </p>
+              </div>
+            </div>
+
+            <form id="tweetForm" class="space-y-6">
+              {{ csrfField() }}
+              <div class="relative">
+                <textarea
+                  id="tweetContent"
+                  name="prompt"
+                  placeholder="Ex: Partagez une réflexion sur l'IA et son impact sur la créativité..."
+                  rows="6"
+                  class="w-full p-4 rounded-xl bg-gray-800/50 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none transition-all"
+                ></textarea>
+                <div class="absolute bottom-3 right-3 text-gray-500 text-sm">
+                  <span id="charCount">0</span>/280
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <button
+                  type="button"
+                  id="enrichBtn"
+                  class="group flex items-center justify-center space-x-2 px-4 py-3 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-medium rounded-xl transition-all duration-200 btn-glow"
+                >
+                  <i data-lucide="sparkles" class="w-4 h-4 group-hover:scale-110 transition-transform"></i>
+                  <span>Générer</span>
+                </button>
+
+                <button
+                  type="button"
+                  id="hashtagBtn"
+                  class="group flex items-center justify-center space-x-2 px-4 py-3 bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-medium rounded-xl transition-all duration-200 btn-glow"
+                >
+                  <i data-lucide="hash" class="w-4 h-4 group-hover:scale-110 transition-transform"></i>
+                  <span>Hashtags</span>
+                </button>
+
+                <button
+                  type="button"
+                  id="analyzeBtn"
+                  class="group flex items-center justify-center space-x-2 px-4 py-3 bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-600 hover:to-cyan-700 text-white font-medium rounded-xl transition-all duration-200 btn-glow"
+                >
+                  <i data-lucide="bar-chart-3" class="w-4 h-4 group-hover:scale-110 transition-transform"></i>
+                  <span>Analyser</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Features Sidebar -->
+        <div class="space-y-6">
+          <div class="glass-effect rounded-2xl p-6">
+            <h3 class="font-semibold mb-4 flex items-center">
+              <i data-lucide="zap" class="w-5 h-5 text-yellow-400 mr-2"></i>
+              Fonctionnalités
+            </h3>
+            <ul class="space-y-3 text-sm text-gray-300">
+              <li class="flex items-center">
+                <i data-lucide="check" class="w-4 h-4 text-green-400 mr-2"></i>
+                Génération de contenu optimisé
+              </li>
+              <li class="flex items-center">
+                <i data-lucide="check" class="w-4 h-4 text-green-400 mr-2"></i>
+                Suggestions de hashtags pertinents
+              </li>
+              <li class="flex items-center">
+                <i data-lucide="check" class="w-4 h-4 text-green-400 mr-2"></i>
+                Analyse d'engagement prédictive
+              </li>
+              <li class="flex items-center">
+                <i data-lucide="check" class="w-4 h-4 text-green-400 mr-2"></i>
+                Ton et style adaptatifs
+              </li>
+            </ul>
+          </div>
+
+          <div class="glass-effect rounded-2xl p-6">
+            <h3 class="font-semibold mb-4 flex items-center">
+              <i data-lucide="lightbulb" class="w-5 h-5 text-blue-400 mr-2"></i>
+              Conseils
+            </h3>
+            <div class="text-sm text-gray-300 space-y-2">
+              <p>
+                • Soyez spécifique dans votre demande
+              </p>
+              <p>
+                • Incluez le ton souhaité (professionnel, humoristique...)
+              </p>
+              <p>
+                • Précisez votre public cible
+              </p>
+              <p>
+                • Utilisez des mots-clés clés
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Results Section -->
+      <div class="space-y-6">
+        <!-- Generated Tweet -->
+        <div id="enrichedText" class="result-box hidden glass-effect rounded-2xl p-6">
+          <div class="flex items-center mb-4">
+            <i data-lucide="sparkles" class="w-6 h-6 text-blue-400 mr-3"></i>
+            <h3 class="text-lg font-semibold">
+              Tweet généré
+            </h3>
+          </div>
+          <div class="prose prose-invert max-w-none">
+            <div id="generatedContent" class="text-gray-100 leading-relaxed">
+            </div>
+          </div>
+          <div class="mt-4 flex space-x-3">
+            <button
+              onclick="copyToClipboard('generatedContent')"
+              class="flex items-center space-x-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors"
+            >
+              <i data-lucide="copy" class="w-4 h-4"></i>
+              <span>Copier</span>
+            </button>
+            <button
+              onclick="useGeneratedContent()"
+              class="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg transition-colors"
+            >
+              <i data-lucide="edit-3" class="w-4 h-4"></i>
+              <span>Utiliser</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Hashtags -->
+        <div id="suggestions" class="result-box hidden glass-effect rounded-2xl p-6">
+          <div class="flex items-center mb-4">
+            <i data-lucide="hash" class="w-6 h-6 text-purple-400 mr-3"></i>
+            <h3 class="text-lg font-semibold">
+              Hashtags suggérés
+            </h3>
+          </div>
+          <div id="hashtagsContainer" class="flex flex-wrap gap-2">
+          </div>
+        </div>
+
+        <!-- Analysis -->
+        <div id="analysisText" class="result-box hidden glass-effect rounded-2xl p-6">
+          <div class="flex items-center mb-4">
+            <i data-lucide="bar-chart-3" class="w-6 h-6 text-cyan-400 mr-3"></i>
+            <h3 class="text-lg font-semibold">
+              Analyse du tweet
+            </h3>
+          </div>
+          <div id="analysisContent" class="text-gray-100 leading-relaxed">
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      // Initialisation des icônes
+      lucide.createIcons();
+      // Éléments DOM
+
+      const tweetContent = document.getElementById("tweetContent");
+
+      const charCount = document.getElementById("charCount");
+
+      const enrichedBox = document.getElementById("enrichedText");
+
+      const suggestionsBox = document.getElementById("suggestions");
+
+      const analysisBox = document.getElementById("analysisText");
+
+      const generatedContent = document.getElementById("generatedContent");
+
+      const hashtagsContainer = document.getElementById("hashtagsContainer");
+
+      const analysisContent = document.getElementById("analysisContent");
+
+      const csrfToken = document.querySelector('#tweetForm input[name="_csrf"]').value;
+      // Compteur de caractères
+
+      tweetContent.addEventListener("input", () => {
+        charCount.textContent = tweetContent.value.length;
+        charCount.className = tweetContent.value.length > 280 ? "text-red-400" : "text-gray-500";
+      });
+      // Fonctions utilitaires CORRIGÉES
+
+      function setLoadingState(element, text) {
+        element.classList.remove("hidden", "success", "error");
+        element.classList.add("loading");
+        // CORRECTION : Gestion spécifique par type d'élément
+        if (element === enrichedBox) {
+          generatedContent.innerHTML = `<div class="flex items-center space-x-3 text-gray-400 pulse-loading">
+              <i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i>
+              <span>${text}</span>
+            </div>`;
+        } else if (element === suggestionsBox) {
+          hashtagsContainer.innerHTML = `<div class="flex items-center space-x-3 text-gray-400 pulse-loading">
+              <i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i>
+              <span>${text}</span>
+            </div>`;
+        } else if (element === analysisBox) {
+          analysisContent.innerHTML = `<div class="flex items-center space-x-3 text-gray-400 pulse-loading">
+              <i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i>
+              <span>${text}</span>
+            </div>`;
+        }
+        lucide.createIcons();
+      }
+
+      function setSuccessState(element) {
+        element.classList.remove("loading", "error");
+        element.classList.add("success");
+      }
+
+      function setErrorState(element, message) {
+        element.classList.remove("loading", "success");
+        element.classList.add("error");
+        // CORRECTION : Gestion spécifique par type d'élément
+        if (element === enrichedBox) {
+          generatedContent.innerHTML = `<div class="flex items-center space-x-3 text-red-400">
+              <i data-lucide="alert-circle" class="w-5 h-5"></i>
+              <span>${message}</span>
+            </div>`;
+        } else if (element === suggestionsBox) {
+          hashtagsContainer.innerHTML = `<div class="flex items-center space-x-3 text-red-400">
+              <i data-lucide="alert-circle" class="w-5 h-5"></i>
+              <span>${message}</span>
+            </div>`;
+        } else if (element === analysisBox) {
+          analysisContent.innerHTML = `<div class="flex items-center space-x-3 text-red-400">
+              <i data-lucide="alert-circle" class="w-5 h-5"></i>
+              <span>${message}</span>
+            </div>`;
+        }
+        lucide.createIcons();
+      }
+
+      function copyToClipboard(elementId) {
+        const element = document.getElementById(elementId);
+        const text = element.textContent || element.innerText;
+        navigator.clipboard.writeText(text).then(() => {
+          // Feedback visuel
+          const originalText = event.target.innerHTML;
+          event.target.innerHTML = '<i data-lucide="check" class="w-4 h-4"></i><span>Copié!</span>';
+          lucide.createIcons();
+          setTimeout(() => {
+            event.target.innerHTML = originalText;
+            lucide.createIcons();
+          }, 2e3);
+        });
+      }
+
+      function useGeneratedContent() {
+        tweetContent.value = generatedContent.textContent;
+        tweetContent.dispatchEvent(new Event("input"));
+      }
+      // Gestionnaires d'événements
+
+      document.getElementById("enrichBtn").addEventListener("click", async () => {
+        if (!tweetContent.value.trim()) {
+          alert("Veuillez saisir une idée ou un texte à générer");
+          return;
+        }
+        setLoadingState(enrichedBox, "Génération du tweet en cours...");
+        enrichedBox.classList.remove("hidden");
+        try {
+          const response = await fetch("/grok/generate", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRF-Token": csrfToken
+            },
+            body: JSON.stringify({
+              prompt: tweetContent.value
+            })
+          });
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || "Erreur réseau");
+          }
+          const data = await response.json();
+          generatedContent.textContent = data.content;
+          setSuccessState(enrichedBox);
+        } catch (err) {
+          console.error("Erreur génération:", err);
+          setErrorState(enrichedBox, err.message || "Erreur lors de la génération du tweet");
+        }
+      });
+
+      document.getElementById("hashtagBtn").addEventListener("click", async () => {
+        if (!tweetContent.value.trim()) {
+          alert("Veuillez saisir un texte pour générer des hashtags");
+          return;
+        }
+        setLoadingState(suggestionsBox, "Recherche des meilleurs hashtags...");
+        suggestionsBox.classList.remove("hidden");
+        try {
+          const response = await fetch("/grok/suggest", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRF-Token": csrfToken
+            },
+            body: JSON.stringify({
+              text: tweetContent.value
+            })
+          });
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || "Erreur réseau");
+          }
+          const data = await response.json();
+          const hashtags = data.hashtags ? data.hashtags.split(/\s+/) : [];
+          hashtagsContainer.innerHTML = hashtags.length ? hashtags.map(tag => `<span class="px-3 py-2 bg-purple-500/20 border border-purple-500/30 rounded-lg text-purple-300 hover:bg-purple-500/30 transition-colors cursor-pointer">#${tag.replace(/^#/, "")}</span>`).join("") : '<span class="text-gray-400">Aucun hashtag généré</span>';
+          setSuccessState(suggestionsBox);
+        } catch (err) {
+          console.error("Erreur hashtags:", err);
+          setErrorState(suggestionsBox, err.message || "Erreur lors de la génération des hashtags");
+        }
+      });
+
+      document.getElementById("analyzeBtn").addEventListener("click", async () => {
+        if (!tweetContent.value.trim()) {
+          alert("Veuillez saisir un texte à analyser");
+          return;
+        }
+        setLoadingState(analysisBox, "Analyse de votre tweet en cours...");
+        analysisBox.classList.remove("hidden");
+        try {
+          const response = await fetch("/grok/analyze", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRF-Token": csrfToken
+            },
+            body: JSON.stringify({
+              text: tweetContent.value
+            })
+          });
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || "Erreur réseau");
+          }
+          const data = await response.json();
+          analysisContent.textContent = data.analysis;
+          setSuccessState(analysisBox);
+        } catch (err) {
+          console.error("Erreur analyse:", err);
+          setErrorState(analysisBox, err.message || "Erreur lors de l'analyse du tweet");
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -20,6 +20,7 @@ import FollowsController from '#controllers/follows_controller'
 import ProfilesController from '#controllers/profils_controller'
 import BlocksController from '#controllers/blocks_controller'
 import HashtagsController from '#controllers/hashtags_controller'
+import GrokController from '#controllers/groks_controller'
 // import HashtagsController from '#controllers/hashtags_controller'
 
 router.on('/').render('pages/home')
@@ -77,4 +78,23 @@ router
 router
   .get('/hashtag/:tag', [HashtagsController, 'showHashtags'])
   .as('hashtags.show')
+  .use(middleware.auth())
+
+// les routes pour l'utilisation de grok
+router
+  .group(() => {
+    router.post('/generate', [GrokController, 'generateTweet']).as('grok.generate')
+    router.post('/suggest', [GrokController, 'suggestHashtags']).as('grok.suggest')
+    router.post('/analyze', [GrokController, 'analyzeTweet']).as('grok.analyze')
+  })
+  .prefix('/grok')
+  .use(middleware.auth()) // ✅ Protection par authentification
+
+// ✅ Route pour afficher la page IA Grok
+router
+  .get('/grok', async ({ view, auth }) => {
+    await auth.check()
+    return view.render('pages/grok')
+  })
+  .as('grok.page')
   .use(middleware.auth())
