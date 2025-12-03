@@ -377,23 +377,46 @@
         <div class="max-w-4xl mx-auto">
           <!-- Header utilisateur -->
           <div class="relative">
-            <img src="assets/téléchargement.jpg" alt="Bannière" class="w-full h-60 object-cover" />
-            <div class="absolute -bottom-16 left-6">
+            @if(auth.user && auth.user.id === user.id)
               <img
-                id="avatar"
-                src="assets/téléchargement.jpg"
-                alt="Avatar"
-                class="w-32 h-32 rounded-full border-4 border-black object-cover shadow-lg"
+                src="{{ auth.user.bannerUrl || 'https://abs.twimg.com/sticky/default_profile_images/default_profile_400x400.png' }}"
+                alt="Bannière"
+                class="w-full h-60 object-cover"
               />
-            </div>
+              <div class="absolute -bottom-16 left-6">
+                <img
+                  id="avatar"
+                  src="{{ auth.user.avatarUrl || '/images/default-avatar.png' }}"
+                  alt="Avatar"
+                  class="w-32 h-32 rounded-full border-4 border-black object-cover shadow-lg"
+                />
+              </div>
+            @else
+              <img
+                src="{{ user.bannerUrl || 'https://abs.twimg.com/sticky/default_profile_images/default_profile_400x400.png' }}"
+                alt="Bannière"
+                class="w-full h-60 object-cover"
+              />
+              <div class="absolute -bottom-16 left-6">
+                <img
+                  id="avatar"
+                  src="{{ user.avatarUrl || '/images/default-avatar.png' }}"
+                  alt="Avatar"
+                  class="w-32 h-32 rounded-full border-4 border-black object-cover shadow-lg"
+                />
+              </div>
+            @endif
             <!-- Bouton Éditer le profil -->
-            <div class="absolute bottom-4 right-4">
-              <button
-                class="bg-black bg-opacity-50 text-white px-6 py-2 rounded-full border border-gray-600 hover:bg-opacity-70 transition"
-              >
-                Éditer le profil
+            <a href="/profile/edit">
+              <div class="absolute bottom-4 right-4">
+                <button
+                  class="bg-black bg-opacity-50 text-white px-6 py-2 rounded-full border border-gray-600 hover:bg-opacity-70 transition"
+                >
+                  Éditer le profil
               </button>
-            </div>
+              </div>
+            </a>
+
           </div>
 
           <!-- Infos utilisateur -->

@@ -21,11 +21,22 @@ import ProfilesController from '#controllers/profils_controller'
 import BlocksController from '#controllers/blocks_controller'
 import HashtagsController from '#controllers/hashtags_controller'
 import GrokController from '#controllers/groks_controller'
+import EditProfilesController from '#controllers/edit_profiles_controller'
 // import HashtagsController from '#controllers/hashtags_controller'
 
 router.on('/').render('pages/home')
 router.on('/signupView').render('pages/signup')
+
 router.on('/login').render('pages/login')
+
+// Route pour afficher la page d'édition
+router
+  .get('/profile/edit', async ({ view, auth }) => {
+    await auth.check()
+    return view.render('pages/editProfile')
+  })
+  .as('profiles.edit')
+  .use(middleware.auth())
 // router.on('/profil').render('pages/profil').use(middleware.auth()).as('profil.view')
 // router.on('/dashboard').render('pages/dashboard').use(middleware.auth()).as('dashboard')
 router.get('/dashboard', [CreateTweetsController, 'index']).use(middleware.auth()).as('dashboard')
@@ -97,4 +108,9 @@ router
     return view.render('pages/grok')
   })
   .as('grok.page')
+  .use(middleware.auth())
+
+router
+  .post('/profile/edit', [EditProfilesController, 'update'])
+  .as('profiles.update')
   .use(middleware.auth())

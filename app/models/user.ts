@@ -33,10 +33,19 @@ export default class User extends compose(BaseModel, AuthFinder) {
   declare avatarUrl: string | null
 
   @column()
-  declare bio: string | null
+  declare bannerUrl: string | null
 
   @column()
   declare isVerified: boolean
+
+  @column()
+  declare location: string | null
+
+  @column()
+  declare website: string | null
+
+  @column()
+  declare bio: string | null
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
